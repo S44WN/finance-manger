@@ -37,6 +37,34 @@ app
         message: `Hello ${name}!`,
       });
     }
+  )
+
+  .post(
+    "/create/:userId",
+
+    zValidator(
+      "json",
+      z.object({
+        name: z.string(),
+        email: z.string().email(),
+      })
+    ),
+
+    zValidator(
+      "param",
+      z.object({
+        userId: z.string(),
+      })
+    ),
+
+    (c) => {
+      const { name, email } = c.req.valid("json");
+      const { userId } = c.req.valid("param");
+
+      return c.json({
+        message: "User created!",
+      });
+    }
   );
 
 export const GET = handle(app);
