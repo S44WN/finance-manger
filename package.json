@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:generate": "",
-    "db:migrate": "",
-    "db:studio": ""
+    "db:generate": "drizzle-kit generate:pg --schema db/schema.ts --out ./drizzle",
+    "db:migrate": "bun ./scripts/migrate.ts",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@clerk/backend": "^1.2.2",
