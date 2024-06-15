@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "",
+    "db:migrate": "",
+    "db:studio": ""
   },
   "dependencies": {
     "@clerk/backend": "^1.2.2",
