@@ -1,10 +1,11 @@
 import { Hono } from "hono";
 
-import { zValidator } from "@hono/zod-validator";
 import { db } from "@/db/drizzle";
-import { accounts, insertAccountSchema } from "@/db/schema";
-import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { eq } from "drizzle-orm";
+import { accounts, insertAccountSchema } from "@/db/schema";
+import { createId } from "@paralleldrive/cuid2";
+import { zValidator } from "@hono/zod-validator";
+import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 
 const app = new Hono()
   // api/accouts/ is the base path here
@@ -54,11 +55,20 @@ const app = new Hono()
 
       // inserts the account into the database
 
-      const data = await db.insert(accounts).values({
-        id: "testid", // this is a placeholder
-        userId: auth.userId,
-        name: values.name,
-      });
+      const [data] = await db
+        .insert(accounts)
+        .values({
+          id: createId(), // this is a placeholder
+          userId: auth.userId,
+          ...values,
+        })
+        /* 
+      unlike the select method, the insert method returns an array of the inserted data
+      so we add the .returning() method to get the data
+      */
+        .returning();
+
+      return c.json({ data }); // returns the data
 
       // gets the data from the request body
     }
